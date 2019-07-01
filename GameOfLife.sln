@@ -5,6 +5,10 @@ VisualStudioVersion = 16.0.29001.49
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLife", "GameOfLife\GameOfLife.csproj", "{6E9575E9-AF45-4E60-9311-A8011CF2EAF6}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "WPF", "WPF", "{38C2EA56-709B-4067-B4DC-3FD9EDC50ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameOfLifeApplication", "GameOfLifeApplication\GameOfLifeApplication.csproj", "{ACBDC640-E173-44F3-A735-E7DDF2ED071A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,9 +19,16 @@ Global
 		{6E9575E9-AF45-4E60-9311-A8011CF2EAF6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E9575E9-AF45-4E60-9311-A8011CF2EAF6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E9575E9-AF45-4E60-9311-A8011CF2EAF6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACBDC640-E173-44F3-A735-E7DDF2ED071A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACBDC640-E173-44F3-A735-E7DDF2ED071A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACBDC640-E173-44F3-A735-E7DDF2ED071A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACBDC640-E173-44F3-A735-E7DDF2ED071A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{ACBDC640-E173-44F3-A735-E7DDF2ED071A} = {38C2EA56-709B-4067-B4DC-3FD9EDC50ABE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BFE17846-73FF-4AC4-AA94-4270142A4BBB}

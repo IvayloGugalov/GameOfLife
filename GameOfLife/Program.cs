@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace GameOfLife
@@ -9,12 +10,36 @@ namespace GameOfLife
     class Program
     {
         private static int[,] _grid;
-        private static int _rows = 10;
-        private static int _cols = 10;
+        private static int _cols;
+        private static int _rows;
 
         static void Main(string[] args)
         {
+            while (true)
+            {
+                Console.WriteLine($"Enter the number of rows you want:");
+                var input = int.TryParse(Console.ReadLine(), out _rows);
+                
+                Console.WriteLine("Enter the number of columns you want:");
+                var secondInput = int.TryParse(Console.ReadLine(), out _cols);
+
+                if (IsInputValid(_rows, _cols))
+                {
+                    break;
+                }
+            }
+
             CreateGrid(_rows,_cols);
+        }
+
+
+        private static bool IsInputValid(int x, int y)
+        {
+            if (x > 0 && y > 0) return true;
+
+            Console.WriteLine("Invalid input!");
+            return false;
+
         }
 
         static void CreateGrid(int rows, int cols)
@@ -23,9 +48,6 @@ namespace GameOfLife
 
             int[,] grid = new int[rows, cols];
 
-            string command = string.Empty;
-
-            
             for (int row = 0; row < rows; row++)
             {
                 for (int col = 0; col < cols; col++)
@@ -40,7 +62,8 @@ namespace GameOfLife
             Console.WriteLine();
             int[,] updatedGrid = new int[_rows, _cols];
             //Array.Copy(grid, updatedGrid, grid.GetLength(0)*grid.GetLength(1));
-            while (command == "")
+
+            while (true)
             {
                 for (int i = 0; i < updatedGrid.GetLength(0); i++)
                 {
@@ -77,18 +100,15 @@ namespace GameOfLife
                 }
 
                 grid = updatedGrid;
-
-
-                command = Console.ReadLine();
+                Thread.Sleep(700);
                 Console.Clear();
+                
             }
-
         }
 
 
         static void PrintCell(int[,] grid, int x, int y)
         {
-
             if (grid[x, y] == 1)
             {
                 Console.BackgroundColor = ConsoleColor.Blue;
