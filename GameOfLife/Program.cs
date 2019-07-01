@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfLife.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace GameOfLife
         private static int[,] _grid;
         private static int _cols;
         private static int _rows;
+
+        private static GridService _gridService;
 
         static void Main(string[] args)
         {
@@ -61,6 +64,8 @@ namespace GameOfLife
 
             Console.WriteLine();
             int[,] updatedGrid = new int[_rows, _cols];
+
+
             //Array.Copy(grid, updatedGrid, grid.GetLength(0)*grid.GetLength(1));
 
             while (true)
@@ -71,7 +76,9 @@ namespace GameOfLife
                     {
                         //Alive or Dead
                         int cellState = grid[i, j];
-                        int neighborCell = CountNeighborCells(grid, i, j);
+                        
+                        var count = new GridService(_rows, _cols);
+                        int neighborCell = count.CountNeighborCells(grid, i, j);
 
                         if (cellState == 0 && neighborCell == 3)
                         {
@@ -123,24 +130,6 @@ namespace GameOfLife
             }
         }
 
-        static int CountNeighborCells(int[,] grid, int x, int y)
-        {
-            int sum = 0;
-
-            for (int i = -1; i < 2; i++)
-            {
-                for (int j = -1; j < 2; j++)
-                {
-                    int row = (x + i + _rows) % _rows;
-                    int col = (y + j + _cols) % _cols;
-
-                    sum += grid[row, col];
-                }
-            }
-            sum -= grid[x, y];
-
-            return sum;
-        }
 
     }
 }
