@@ -16,6 +16,8 @@ namespace GameOfLife.User_Presentation
             int rows = 0;
             int cols = 0;
 
+            Console.WriteLine("Welcome to the game!\nIn order to win all you have to do is have more alive cells than dead in under 100 tries" +
+                              "\nGood luck!!!");
             //A while loop that breaks when the user has inputted correct data
             while (true)
             {
@@ -40,7 +42,7 @@ namespace GameOfLife.User_Presentation
         private static bool IsInputValid(int x, int y)
         {
             //Validate if the user input is a positive number
-            if (x > 0 && y > 0) return true;
+            if (x >= 9 && y >= 9) return true;
 
             Console.WriteLine("Invalid input!");
             return false;

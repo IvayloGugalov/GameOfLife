@@ -8,6 +8,9 @@ namespace GameOfLife.Services
     /// </summary>
     public class GridService : IGridService
     {
+        private int _countAlive = 0;
+        private int _countTries = 0;
+
         public int Rows { get; set; }
         public int Cols { get; set; }
 
@@ -80,6 +83,7 @@ namespace GameOfLife.Services
                             //Change cell state from dead to alive
                             case 0 when neighborCell == 3:
                                 updatedGrid[i, j] = 1;
+                                _countAlive++;
                                 PrintCell(updatedGrid, i, j);
                                 break;
 
@@ -92,6 +96,12 @@ namespace GameOfLife.Services
                             //The state of the cell remains the same
                             default:
                                 updatedGrid[i, j] = cellState;
+
+                                if (updatedGrid[i, j] == 1)
+                                {
+                                    _countAlive++;
+                                }
+                               
                                 PrintCell(updatedGrid, i, j);
                                 break;
                         }
@@ -100,10 +110,41 @@ namespace GameOfLife.Services
                     Console.WriteLine();
                 }
 
+                _countTries++;
                 grid = updatedGrid;
+
+                if (AreAliveCellsSixtyPercentOfAll(this.Rows * this.Cols))
+                {
+                    return;
+                }
+
+                if (_countTries == 100)
+                {
+                    Console.WriteLine("So sorry but you lost..." +
+                                      $"\nNumber of tries: {_countTries}");
+                    return;
+                }
+
+                _countAlive = 0;
+
                 Thread.Sleep(500);
                 Console.Clear();
             }
+        }
+
+        private bool AreAliveCellsSixtyPercentOfAll(int allCells)
+        {
+            double sixtyPercentCells = allCells * 0.51;
+
+            if (!(sixtyPercentCells <= _countAlive))
+            {
+                return false;
+            }
+
+            Console.WriteLine("The alive cells are more than half of all the cells.\nYou win!");
+            Console.WriteLine($"{_countTries} tries needed");
+            return true;
+
         }
 
         //Printing the cells: Green for alive cells and Red for the rest
