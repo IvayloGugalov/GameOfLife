@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GameOfLife.Services
+﻿namespace GameOfLife.Services
 {
     interface IGridService
     {
         int CountNeighborCells(int[,] grid, int x, int y);
+
+        void CreateGrid(int rows, int cols);
+
+        void PrintCell(int[,] grid, int x, int y);
     }
 }
