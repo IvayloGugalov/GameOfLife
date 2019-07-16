@@ -10,18 +10,22 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="6*"/>
-            <ColumnDefinition Width="2*"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="1*"/>
-            <RowDefinition Height="8*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
 
-        <Button Content="Load Content" Click="Start_Game" Width="100" Height="40"/>
-        <Button Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Content="Start Game" Click="New_Button" Width="100" Height="40"/>
-        <Canvas x:Name="GameCanvas" Grid.Column="1" Grid.Row="1"></Canvas>
-
+        <StackPanel Grid.Row="1" Grid.Column="0">
+            <Button Content="Load Content" Click="Load_Game" x:Name="LoadContent" IsEnabled="True"
+                    Width="100" Height="40" Margin="0,20,0,0"/>
+            <Button VerticalAlignment="Top" Content="Start Game" x:Name="StartGame" Click="Timer_Tick"
+                    IsEnabled="True" Width="100" Height="40" Margin="0,20,0,0"/>
+            <Button Content="Pause" Click="Pause_Game"  x:Name="PauseGame" IsEnabled="True" 
+                    Width="100" Height="40" Margin="0,20,0,0"/>
+        </StackPanel>
+        
+        <Canvas x:Name="GameCanvas" Grid.Column="1" Grid.Row="1" Margin="0,0,25,25"></Canvas>
 
     </Grid>
 </Window>

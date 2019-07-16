@@ -12,6 +12,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
+using GameOfLifeApplication.Service;
 using GameOfLifeApplication.ViewModels;
 
 namespace GameOfLifeApplication
@@ -21,103 +23,149 @@ namespace GameOfLifeApplication
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const int rows = 4;
-        private const int cols = 4;
+        private IGridService _gridService;
+        private const int rows = 50;
+        private const int cols = 50;
         private readonly Rectangle[,] _currentCell = new Rectangle[rows, cols];
+
+        private readonly DispatcherTimer _timer = new DispatcherTimer();
+
+        private bool _isGamePaused = false;
+        private bool _isGameLoaded = false;
+        private int _countAlive = 0;
+        private int _countTries = 0;
 
 
         public MainWindow()
         {
             InitializeComponent();
 
-            this.DataContext = new MainWindowViewModel();
+            _timer.Interval = TimeSpan.FromSeconds(0.2);
+            _timer.Tick += Timer_Tick;
         }
 
-        private void Start_Game(object sender, RoutedEventArgs e)
+        private void Load_Game(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
                 {
+                    //Create the Grid
                     Rectangle rectangle = new Rectangle
                     {
-                        Width = GameCanvas.ActualWidth / rows - 1.0,
-                        Height = GameCanvas.ActualHeight / cols - 1.0,
+                        Width = GameCanvas.ActualWidth / rows - 0.5,
+                        Height = GameCanvas.ActualHeight / cols - 0.5,
                         Fill = Brushes.ForestGreen,
                     };
                     GameCanvas.Children.Add(rectangle);
                     Canvas.SetLeft(rectangle, j * GameCanvas.ActualWidth / rows);
                     Canvas.SetTop(rectangle, i * GameCanvas.ActualHeight / cols);
 
-                    rectangle.MouseDown += WhenMouseIsClicked;
+                    //Switch the color
+                    rectangle.MouseEnter += WhenMouseEntersCell;
 
                     _currentCell[i, j] = rectangle;
                 }
             }
+
+            _isGameLoaded = true;
         }
 
-        private void WhenMouseIsClicked(object sender, MouseButtonEventArgs e)
+        /// <summary>
+        /// Switch the color of a cell when the mouse enters it
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="mouseEventArgs"></param>
+        private void WhenMouseEntersCell(object sender, MouseEventArgs mouseEventArgs)
         {
             ((Rectangle) sender).Fill = (((Rectangle) sender).Fill == Brushes.ForestGreen)
                 ? Brushes.Red
                 : Brushes.ForestGreen;
         }
 
-        private void New_Button(object sender, RoutedEventArgs e)
+        private void Pause_Game(object sender, EventArgs e)
         {
-            int[,] grid = new int[rows, cols];
+            _isGamePaused = true;
+        }
 
-            for (int i = 0; i < rows; i++)
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            //Start game
+            _timer.Start();
+            StartGame.Content = "End game";
+            Functions();
+
+            if (!_isGamePaused)
             {
-                for (int j = 0; j < cols; j++)
-                {
-                    int neighborCell = CountNeighborCells(i, j);
-
-                    if (_currentCell[i,j].Fill == Brushes.Red
-                        && neighborCell == 3)
-                    {
-                        _currentCell[i, j].Fill = Brushes.ForestGreen;
-                    }
-
-                    else if(_currentCell[i,j].Fill == Brushes.ForestGreen
-                            && (neighborCell < 2 || neighborCell > 3))
-                    {
-                        _currentCell[i, j].Fill = Brushes.Red;
-                    }
-
-                }
+                return;
+            }
+            _timer.Stop();
+            StartGame.Content = "Resume game";
+            _isGamePaused = false;
+            if (_isGamePaused)
+            {
+                _timer.Start();
             }
 
         }
 
-
-        private int CountNeighborCells(int x, int y)
+        private void Functions()
         {
-            int sum = 0;
-
-            //Cycle all the cells around the current
-            for (int i = -1; i < 2; i++)
+            _gridService = new GridService
             {
-                for (int j = -1; j < 2; j++)
-                {
-                    int row = (x + i + rows) % rows;
-                    int col = (y + j + cols) % cols;
+                Rows = rows,
+                Cols = cols
+            };
 
-                    //Check if the surrounding cells are Red
-                    if (_currentCell[row, col].Fill == Brushes.ForestGreen)
+            SwitchCellState();
+            _countAlive = 0;
+            //If the player didn't win, stop the game
+            if (_gridService.DidThePlayerWin(_countAlive, _countTries))
+            {
+                StartGame.Content = "Start game";
+                LoadContent.Content = "Reload game";
+                //StartGame.IsEnabled = false;
+
+                _timer.Stop();
+            }
+        }
+
+        private void SwitchCellState()
+        {
+            //Go through the grid
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    //Check the surrounding cells
+                    int neighborCell = _gridService.CountNeighborCells(i, j, rows, cols, _currentCell);
+
+                    //Change cell state from dead to alive
+                    if (_currentCell[i, j].Fill == Brushes.Red && neighborCell == 3)
                     {
-                        sum++;
+                        _currentCell[i, j].Fill = Brushes.ForestGreen;
+                        _countAlive++;
+                    }
+
+                    //Change cell state from alive to dead
+                    else if (_currentCell[i, j].Fill == Brushes.ForestGreen &&(neighborCell < 2 || neighborCell > 3))
+                    {
+                        _currentCell[i, j].Fill = Brushes.Red;
+                    }
+
+                    //Doesn't work correctly, need a second variable...
+                    else
+                    {
+                        _currentCell[i, j].Fill = _currentCell[i, j].Fill;
+                        if (_currentCell[i, j].Fill == Brushes.ForestGreen)
+                        {
+                            _countAlive++;
+                        }
                     }
                 }
             }
 
-            //Subtract the current cell state if it is Red
-            if (_currentCell[x, y].Fill == Brushes.Red)
-            {
-                sum--;
-            }
-
-            return sum;
+            _countTries++;
         }
     }
 }
