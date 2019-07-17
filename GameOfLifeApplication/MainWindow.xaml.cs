@@ -1,20 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 using GameOfLifeApplication.Service;
-using GameOfLifeApplication.ViewModels;
 
 namespace GameOfLifeApplication
 {
@@ -24,14 +15,16 @@ namespace GameOfLifeApplication
     public partial class MainWindow : Window
     {
         private IGridService _gridService;
-        private const int rows = 50;
-        private const int cols = 50;
+        private readonly ICreateShapes _createShapes = new CreateShapes();
+
+        private const int rows = 20;
+        private const int cols = 20;
         private readonly Rectangle[,] _currentCell = new Rectangle[rows, cols];
 
         private readonly DispatcherTimer _timer = new DispatcherTimer();
 
         private bool _isGamePaused = false;
-        private bool _isGameLoaded = false;
+        public bool _isGameLoaded = false;
         private int _countAlive = 0;
         private int _countTries = 0;
 
@@ -41,7 +34,7 @@ namespace GameOfLifeApplication
             InitializeComponent();
 
             _timer.Interval = TimeSpan.FromSeconds(0.2);
-            _timer.Tick += Timer_Tick;
+            _timer.Tick += Start_Game;
         }
 
         private void Load_Game(object sender, RoutedEventArgs e)
@@ -55,7 +48,7 @@ namespace GameOfLifeApplication
                     {
                         Width = GameCanvas.ActualWidth / rows - 0.5,
                         Height = GameCanvas.ActualHeight / cols - 0.5,
-                        Fill = Brushes.ForestGreen,
+                        Fill = Brushes.Red,
                     };
                     GameCanvas.Children.Add(rectangle);
                     Canvas.SetLeft(rectangle, j * GameCanvas.ActualWidth / rows);
@@ -88,20 +81,23 @@ namespace GameOfLifeApplication
             _isGamePaused = true;
         }
 
-        private void Timer_Tick(object sender, EventArgs e)
+        private void Start_Game(object sender, EventArgs e)
         {
             //Start game
             _timer.Start();
-            StartGame.Content = "End game";
             Functions();
 
             if (!_isGamePaused)
             {
                 return;
             }
+
             _timer.Stop();
+
             StartGame.Content = "Resume game";
+
             _isGamePaused = false;
+
             if (_isGamePaused)
             {
                 _timer.Start();
@@ -118,7 +114,7 @@ namespace GameOfLifeApplication
             };
 
             SwitchCellState();
-            _countAlive = 0;
+            
             //If the player didn't win, stop the game
             if (_gridService.DidThePlayerWin(_countAlive, _countTries))
             {
@@ -127,7 +123,11 @@ namespace GameOfLifeApplication
                 //StartGame.IsEnabled = false;
 
                 _timer.Stop();
+                _isGameLoaded = false;
+                _countTries = 0;
+                _countAlive = 0;
             }
+            _countAlive = 0;
         }
 
         private void SwitchCellState()
@@ -144,7 +144,7 @@ namespace GameOfLifeApplication
                     if (_currentCell[i, j].Fill == Brushes.Red && neighborCell == 3)
                     {
                         _currentCell[i, j].Fill = Brushes.ForestGreen;
-                        _countAlive++;
+                        //_countAlive++;
                     }
 
                     //Change cell state from alive to dead
@@ -167,5 +167,29 @@ namespace GameOfLifeApplication
 
             _countTries++;
         }
+
+        private void ComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var choice = ComboBox.SelectedItem;
+            int firstRows = rows / 2;
+            int firstCols = cols / 2;
+            Random random = new Random();
+
+            if (Equals(choice, Square))
+            {
+                _createShapes.CreateTwoSquares(firstRows, firstCols, _currentCell);
+            }
+
+            else if(Equals(choice, BigRectangle))
+            {
+                _createShapes.CreateTwoBigRectangles(firstRows, firstCols, _currentCell);
+            }
+
+            else if (Equals(choice, RandomCells))
+            {
+                _createShapes.CreateRandomizedGrid(rows, cols, random, _currentCell);
+            }
+        }
+
     }
 }

@@ -18,11 +18,17 @@
 
         <StackPanel Grid.Row="1" Grid.Column="0">
             <Button Content="Load Content" Click="Load_Game" x:Name="LoadContent" IsEnabled="True"
-                    Width="100" Height="40" Margin="0,20,0,0"/>
-            <Button VerticalAlignment="Top" Content="Start Game" x:Name="StartGame" Click="Timer_Tick"
+                    Width="100" Height="40"/>
+            <Button VerticalAlignment="Top" Content="Start Game" x:Name="StartGame" Click="Start_Game"
                     IsEnabled="True" Width="100" Height="40" Margin="0,20,0,0"/>
             <Button Content="Pause" Click="Pause_Game"  x:Name="PauseGame" IsEnabled="True" 
                     Width="100" Height="40" Margin="0,20,0,0"/>
+            <ComboBox Name="ComboBox" Margin="0,20,0,0" HorizontalAlignment="Center" Width="144" Height="25" SelectionChanged="ComboBox_SelectionChanged">
+                <ComboBoxItem Height="20" Content="-------------" IsSelected="True"/>
+                <ComboBoxItem Height="20" Name="Square"  Content="Start with two squares"/>
+                <ComboBoxItem Height="20" Name="BigRectangle" Content="Start with big rectangles"></ComboBoxItem>
+                <ComboBoxItem Height="20" Name="RandomCells" Content="Start with random cells"></ComboBoxItem>
+            </ComboBox>
         </StackPanel>
         
         <Canvas x:Name="GameCanvas" Grid.Column="1" Grid.Row="1" Margin="0,0,25,25"></Canvas>

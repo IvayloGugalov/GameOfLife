@@ -6,6 +6,7 @@ namespace GameOfLifeApplication.Service
 {
     class GridService: IGridService
     {
+        private readonly double _thirtyFivePercent = 0.35;
         public int Rows { get; set; }
         public int Cols { get; set; }
 
@@ -40,12 +41,12 @@ namespace GameOfLifeApplication.Service
 
         public bool AreAliveCellsMoreThanTheDead(int allCells, int countAliveCells, int countTries)
         {
-            double moreThanHalfPercentCells = allCells * 0.51;
+            double moreThan_thirtyFivePercentCells = allCells * _thirtyFivePercent;
 
             //Check if the alive cells are more than half of all cells
-            if (moreThanHalfPercentCells <= countAliveCells )
+            if (moreThan_thirtyFivePercentCells <= countAliveCells )
             {
-                MessageBox.Show($"There are more alive cells than dead\nYou won the game!!!\nYou won with {countTries} tries.");
+                MessageBox.Show($"There are 35% alive cells.\nYou won the game!!!\nYou won with {countTries} tries.");
                 return true;
             }
 

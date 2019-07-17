@@ -56,7 +56,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ServiceImplementation\IShapesImplementation.cs" />
+    <Compile Include="ServiceImplementation\ShapesImplementation.cs" />
+    <Compile Include="Service\CreateShapes.cs" />
     <Compile Include="Service\GridService.cs" />
+    <Compile Include="Service\ICreateShapes.cs" />
     <Compile Include="Service\IGridService.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
