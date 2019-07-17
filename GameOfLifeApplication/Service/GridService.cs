@@ -41,10 +41,10 @@ namespace GameOfLifeApplication.Service
 
         public bool AreAliveCellsMoreThanTheDead(int allCells, int countAliveCells, int countTries)
         {
-            double moreThan_thirtyFivePercentCells = allCells * _thirtyFivePercent;
+            double moreThanThirtyFivePercentCells = allCells * _thirtyFivePercent;
 
             //Check if the alive cells are more than half of all cells
-            if (moreThan_thirtyFivePercentCells <= countAliveCells )
+            if (moreThanThirtyFivePercentCells <= countAliveCells )
             {
                 MessageBox.Show($"There are 35% alive cells.\nYou won the game!!!\nYou won with {countTries} tries.");
                 return true;

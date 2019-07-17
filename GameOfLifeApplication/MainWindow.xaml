@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:GameOfLifeApplication"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
-    <Grid>
+    <Grid Background="GhostWhite">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*"/>
             <ColumnDefinition Width="6*"/>
@@ -16,7 +16,19 @@
             <RowDefinition Height="9*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Grid.Row="1" Grid.Column="0">
+        <TextBlock VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="15" Margin="5" Name="InformationText" Visibility="Hidden"
+                   Grid.Row="0" Grid.Column="1" Text="You have 50 attempts to win when you press the Start Game Button!"/>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0,80,0,0" Name="IntroPanel" >
+            <TextBlock Width="150" Height="200" TextWrapping="Wrap" TextAlignment="Center"
+                       FontSize="14" FontFamily="Raavi" Foreground="#3b86ff" >
+                This is the Game of Life. All you need to do is to create your very own grid by hovering the mouse over the it.
+                You also can choose a figure to see what will happen. If you are ready just press the button Show Game.
+            </TextBlock>
+            <Button Width="100" Height="30" VerticalAlignment="Bottom" Margin="0,0,0,50" FontFamily="Raavi" Content="Show Game" Click="Button_Click"></Button>
+        </StackPanel>
+
+        <StackPanel Grid.Row="1" Grid.Column="0" Name="ButtonPanel" Visibility="Hidden">
             <Button Content="Load Content" Click="Load_Game" x:Name="LoadContent" IsEnabled="True"
                     Width="100" Height="40"/>
             <Button VerticalAlignment="Top" Content="Start Game" x:Name="StartGame" Click="Start_Game"
@@ -24,7 +36,7 @@
             <Button Content="Pause" Click="Pause_Game"  x:Name="PauseGame" IsEnabled="True" 
                     Width="100" Height="40" Margin="0,20,0,0"/>
             <ComboBox Name="ComboBox" Margin="0,20,0,0" HorizontalAlignment="Center" Width="144" Height="25" SelectionChanged="ComboBox_SelectionChanged">
-                <ComboBoxItem Height="20" Content="-------------" IsSelected="True"/>
+                <ComboBoxItem Height="20" Content="          -------------" IsSelected="True"/>
                 <ComboBoxItem Height="20" Name="Square"  Content="Start with two squares"/>
                 <ComboBoxItem Height="20" Name="BigRectangle" Content="Start with big rectangles"></ComboBoxItem>
                 <ComboBoxItem Height="20" Name="RandomCells" Content="Start with random cells"></ComboBoxItem>

@@ -191,5 +191,11 @@ namespace GameOfLifeApplication
             }
         }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            ButtonPanel.Visibility = Visibility.Visible;
+            IntroPanel.Visibility = Visibility.Hidden;
+            InformationText.Visibility = Visibility.Visible;
+        }
     }
 }
